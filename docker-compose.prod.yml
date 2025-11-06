@@ -32,7 +32,7 @@ services:
       DB_HOST: mysql
       DB_PORT: 3306
       DB_USERNAME: ${MYSQL_USER:-root}
-      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      DB_PASSWORD: ${MYSQL_PASSWORD:-taskpassword}
       DB_DATABASE: taskmanager
       JWT_SECRET: ${JWT_SECRET:-secret}
       JWT_EXPIRES_IN: 24h
@@ -53,19 +53,6 @@ services:
       NODE_ENV: production
     depends_on: 
       - backend
-    networks:
-      - taskmanager-network
-
-  mobile-app:
-    image: ${DOCKER_USERNAME}/taskmanager-mobile:latest
-    container_name: taskmanager-mobile
-    restart: always
-    ports:
-      - "8081:8081"
-      - "19000:19000"
-    environment:
-      NODE_ENV: production
-      EXPO_DEVTOOLS_LISTEN_ADDRESS: 0.0.0.0
     networks:
       - taskmanager-network
 
