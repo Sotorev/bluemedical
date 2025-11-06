@@ -1,0 +1,22 @@
+FROM node:24-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+COPY tsconfig.json ./
+COPY jest.config.ts ./
+COPY jest.setup.ts ./
+COPY next.config.ts ./
+COPY postcss.config.mjs ./
+COPY eslint.config.mjs ./
+
+RUN npm ci
+
+COPY src ./src
+COPY public ./public
+COPY test-entrypoint.sh ./
+
+RUN chmod +x test-entrypoint.sh
+
+ENTRYPOINT ["./test-entrypoint.sh"]
+

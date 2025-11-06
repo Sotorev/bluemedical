@@ -1,0 +1,17 @@
+node_modules
+npm-debug.log
+.expo
+.expo-shared
+dist
+.git
+.gitignore
+.DS_Store
+*.log
+
+# No excluir en Dockerfile.test
+!coverage
+!README.md
+!test-entrypoint.sh
+!__tests__
+!__mocks__
+

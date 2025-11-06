@@ -1,0 +1,78 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: taskmanager-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: taskmanager
+      MYSQL_USER: ${MYSQL_USER:-taskuser}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-taskpassword}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - taskmanager-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  backend:
+    image: ${DOCKER_USERNAME}/taskmanager-backend:latest
+    container_name: taskmanager-backend
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      API_PREFIX: /api
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USERNAME: ${MYSQL_USER:-root}
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      DB_DATABASE: taskmanager
+      JWT_SECRET: ${JWT_SECRET:-secret}
+      JWT_EXPIRES_IN: 24h
+      CORS_ORIGIN: ${CORS_ORIGIN}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - taskmanager-network
+
+  frontend:
+    image: ${DOCKER_USERNAME}/taskmanager-frontend:latest
+    container_name: taskmanager-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+    depends_on: 
+      - backend
+    networks:
+      - taskmanager-network
+
+  mobile-app:
+    image: ${DOCKER_USERNAME}/taskmanager-mobile:latest
+    container_name: taskmanager-mobile
+    restart: always
+    ports:
+      - "8081:8081"
+      - "19000:19000"
+    environment:
+      NODE_ENV: production
+      EXPO_DEVTOOLS_LISTEN_ADDRESS: 0.0.0.0
+    networks:
+      - taskmanager-network
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  taskmanager-network:
+    driver: bridge

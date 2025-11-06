@@ -1,0 +1,12 @@
+*/node_modules
+*/dist
+*/coverage
+*/.env
+.git
+.gitignore
+*.log
+*.md
+README.md
+.github
+.vscode
+.cursor

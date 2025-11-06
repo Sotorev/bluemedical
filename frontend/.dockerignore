@@ -1,0 +1,16 @@
+Dockerfile
+.dockerignore
+node_modules
+npm-debug.log
+.next
+.git
+.gitignore
+*.md
+.vscode
+.env*.local
+
+# No excluir en Dockerfile.test
+!coverage
+!README.md
+!test-entrypoint.sh
+

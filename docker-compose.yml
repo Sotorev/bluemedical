@@ -1,0 +1,100 @@
+services:
+  # Base de datos MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: taskmanager-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: taskmanager
+      MYSQL_USER: taskuser
+      MYSQL_PASSWORD: taskpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - taskmanager-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: taskmanager-backend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      API_PREFIX: /api
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USERNAME: root
+      DB_PASSWORD: rootpassword
+      DB_DATABASE: taskmanager
+      JWT_SECRET: secret
+      JWT_EXPIRES_IN: 24h
+      CORS_ORIGIN: http://localhost:3000
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - taskmanager-network
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  # Frontend Web
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: taskmanager-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: http://localhost:3001/api
+    depends_on: 
+      - backend
+    networks:
+      - taskmanager-network
+
+  # Mobile App (Expo Metro Bundler & Tests)
+  mobile-app:
+    build:
+      context: ./mobile-app
+      dockerfile: Dockerfile
+    container_name: taskmanager-mobile
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+      - "19000:19000"
+      - "19001:19001"
+      - "19002:19002"
+    environment:
+      NODE_ENV: development
+      EXPO_DEVTOOLS_LISTEN_ADDRESS: 0.0.0.0
+      REACT_NATIVE_PACKAGER_HOSTNAME: localhost
+    volumes:
+      - ./mobile-app:/app
+      - /app/node_modules
+    networks:
+      - taskmanager-network
+    command: npm start
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  taskmanager-network:
+    driver: bridge
+
