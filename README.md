@@ -32,7 +32,7 @@ bluemedical/
 
 1. Clonar el repositorio:
 ```bash
-git clone <repository-url>
+git clone https://github.com/Sotorev/bluemedical
 cd bluemedical
 ```
 
@@ -87,7 +87,7 @@ API RESTful construida con:
 - `PUT /api/tasks/:id` - Actualizar tarea
 - `DELETE /api/tasks/:id` - Eliminar tarea
 
-### Frontend Web (✅ Completado)
+### Frontend Web
 
 Aplicación web construida con:
 - Next.js 16+
