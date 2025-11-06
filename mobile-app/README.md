@@ -101,6 +101,8 @@ Editar el archivo `src/utils/constants.ts` si tu backend no está en `http://loc
 export const API_BASE_URL = 'http://tu-backend-url:puerto/api';
 ```
 
+**Nota importante**: La aplicación móvil no utiliza archivo `.env` para la configuración. La URL de la API debe configurarse directamente editando `src/utils/constants.ts`.
+
 ## Ejecución en Desarrollo
 
 ### Iniciar el servidor de desarrollo de Expo:
@@ -202,7 +204,6 @@ export const API_BASE_URL = 'http://192.168.1.100:3001/api';
 - `npm run web`: Ejecuta la app en el navegador (experimental)
 - `npm test`: Ejecuta los tests en modo watch
 - `npm run testFinal`: Ejecuta los tests una vez (usado en CI/CD)
-- `npm run updateSnapshots`: Actualiza los snapshots de los tests
 
 ## Tests Unitarios
 
@@ -223,11 +224,6 @@ npm run testFinal
 npm test -- --coverage
 ```
 
-### Actualizar snapshots:
-```bash
-npm run updateSnapshots
-```
-
 ### Ejecutar tests en Docker:
 ```bash
 docker-compose -f docker-compose.test.yml up mobile-app-test
@@ -235,7 +231,6 @@ docker-compose -f docker-compose.test.yml up mobile-app-test
 
 Los tests incluyen:
 - Tests de componentes UI (Button, Card, Input, etc.)
-- Tests de snapshot para componentes
 - Tests de componentes de tareas (TaskCard, TaskForm)
 - Cobertura de código configurada
 

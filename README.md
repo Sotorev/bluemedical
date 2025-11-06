@@ -171,7 +171,6 @@ Este script ejecuta todos los tests:
 ```bash
 cd backend
 npm test
-npm run test:watch
 npm test -- --coverage
 
 # Con Docker
@@ -197,9 +196,6 @@ npm test
 
 # Ejecutar tests sin watch
 npm run testFinal
-
-# Actualizar snapshots
-npm run updateSnapshots
 
 # Con Docker
 docker compose -f docker-compose.test.yml up --build mobile-app-test
@@ -263,8 +259,6 @@ docker-compose down -v
 - `*/Dockerfile.test` - Imágenes optimizadas para tests
 - `*/test-entrypoint.sh` - Scripts de entrada para tests
 
-📖 **[Ver documentación completa de Docker](./DOCKER.md)** para arquitectura detallada, mejores prácticas y troubleshooting.
-
 ## 📊 Base de datos
 
 ### Modelo de datos
@@ -297,18 +291,18 @@ docker-compose down -v
 - Manejo centralizado de errores
 - Tests unitarios
 
-### Frontend (Planeado)
+### Frontend
 - Arquitectura component-based
-- Hooks personalizados
+- Hooks personalizados (useTasks, useAuth)
 - Separación de lógica de presentación y negocio
-- Manejo de estados global
+- Manejo de estados global con Context API
 - Componentes reutilizables
 
-### Mobile App (Planeado)
+### Mobile App
 - Patrón Container-Presenter
-- Navegación estructurada
-- Gestión de estado global
-- Almacenamiento seguro de tokens
+- Navegación estructurada con React Navigation
+- Gestión de estado global con Context API
+- Almacenamiento seguro de tokens con Expo Secure Store
 
 ## Seguridad
 
@@ -334,6 +328,8 @@ Las configuraciones se encuentran en `src/utils/constants.ts`:
 ```typescript
 export const API_BASE_URL = 'http://localhost:3001/api';
 ```
+
+**Nota**: La aplicación móvil no utiliza archivo `.env` para la configuración. La URL de la API debe configurarse directamente en `src/utils/constants.ts`.
 
 Para dispositivos físicos, usa la IP de máquina local:
 ```typescript
