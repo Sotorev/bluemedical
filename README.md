@@ -45,6 +45,10 @@ docker-compose up -d
 ```bash
 docker-compose exec backend npm run migration:run
 ```
+En producción:
+```bash
+docker-compose exec backend npm run migration:run:prod
+```
 
 4. (Opcional) Cargar datos de prueba:
 ```bash
